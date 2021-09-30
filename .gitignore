@@ -4,9 +4,11 @@
 /node_modules
 /.pnp
 .pnp.js
-
+key.js
+/config
 # testing
 /coverage
+
 
 # production
 /build

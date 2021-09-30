@@ -6,11 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { BrowserRouter as Router } from "react-router-dom";
 
-import './_base.scss'
-
+import "./_base.scss";
+import store from "./redux/store";
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );

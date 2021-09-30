@@ -1,0 +1,15 @@
+@import "../../_base.scss";
+
+.login {
+  height: 100vh;
+  display: flex;
+  background-color: $primary;
+  justify-content: center;
+  align-items: center;
+  &__form {
+    padding: 5rem;
+    background-color: $background-color;
+    border-radius: 2rem;
+    box-shadow: 10px 10px 8px rgb(255, 87, 87);
+  }
+}
