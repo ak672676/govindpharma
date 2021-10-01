@@ -11,9 +11,17 @@ import {
   MdSentimentDissatisfied,
 } from "react-icons/md";
 
+import { useDispatch } from "react-redux";
+import { log_out } from "../../redux/actions/auth.action";
+
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
+  const logOutHandler = () => {
+    dispatch(log_out());
+  };
+
   return (
     <nav className="sidebar">
       <Link to="/">
@@ -26,6 +34,13 @@ const Sidebar = () => {
         <li>
           <MdSubscriptions size={23} />
           <span>Customer</span>
+        </li>
+      </Link>
+
+      <Link to="/medicine">
+        <li>
+          <MdSubscriptions size={23} />
+          <span>Medicine</span>
         </li>
       </Link>
 
@@ -50,7 +65,7 @@ const Sidebar = () => {
 
       <hr />
 
-      <li>
+      <li onClick={logOutHandler}>
         <MdExitToApp size={23} />
         <span>Log Out</span>
       </li>

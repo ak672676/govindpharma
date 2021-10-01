@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import { login } from "../../redux/actions/auth.action";
 
 import "./loginscreen.scss";
 
@@ -7,9 +11,22 @@ function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = () => {
-    console.log("Email ", email, "  Password ", password);
+  const dispatch = useDispatch();
+
+  const admin = useSelector((state) => state.auth.admin);
+
+  const handlelogin = () => {
+    dispatch(login(email, password));
   };
+
+  const history = useHistory();
+
+  useEffect(() => {
+    console.log("Changed state");
+    if (admin) {
+      history.push("/");
+    }
+  }, [admin, history]);
 
   return (
     <div className="login">
@@ -36,7 +53,7 @@ function LoginScreen() {
             />
           </Form.Group>
 
-          <Button variant="primary" size="sm" onClick={login}>
+          <Button variant="primary" size="sm" onClick={handlelogin}>
             Login
           </Button>
         </Form>

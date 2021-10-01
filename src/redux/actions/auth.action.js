@@ -1,5 +1,4 @@
-import firebase from "firebase/app";
-import auth from "../../firebase";
+import { db, auth } from "../../firebase";
 
 import {
   LOAD_PROFILE,
@@ -15,46 +14,43 @@ export const login = (email, password) => async (dispatch) => {
       type: LOGIN_REQUEST,
     });
 
-    // const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    // const verificationId = await phoneProvider.verifyPhoneNumber(
-    //   "+91" + phoneNumber,
-    //   recaptchaVerifier.current
-    // );
     auth
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
-        console.log("User is 🔦 ", user);
-        dispatch({
-          type: LOGIN_SUCCESS,
-          payload: "aaaa",
-        });
+        const userId = user.user.uid;
+        db.collection("admins")
+          .doc(userId)
+          .get()
+          .then((admin) => {
+            if (!admin.exists) {
+              dispatch({
+                type: LOGIN_FAIL,
+                payload: "Admin doesn't exist in system in system",
+              });
+              return;
+            }
+
+            const currentUser = {
+              id: admin.data().id,
+              imageUrl: admin.data().imageUrl,
+              name: admin.data().name,
+            };
+
+            sessionStorage.setItem("admin", JSON.stringify(currentUser));
+            dispatch({
+              type: LOGIN_SUCCESS,
+              payload: currentUser,
+            });
+          });
       })
       .catch((err) => {
         throw err;
       });
-    // const profile = {
-    //   name: res.additionalUserInfo.profile.name,
-    //   photoURL: res.additionalUserInfo.profile.picture,
-    // };
-
-    // sessionStorage.setItem("ytc-access-token", accessToken);
-    // sessionStorage.setItem("ytc-user", JSON.stringify(profile));
-
-    // dispatch({
-    //   type: LOGIN_SUCCESS,
-    //   payload: accessToken,
-    // });
-    // dispatch({
-    //   type: LOAD_PROFILE,
-    //   payload: profile,
-    // });
-    console.log("aa");
   } catch (error) {
-    console.log(error.message);
-    // dispatch({
-    //   type: LOGIN_FAIL,
-    //   payload: error.message,
-    // });
+    dispatch({
+      type: LOGIN_FAIL,
+      payload: error.message,
+    });
   }
 };
 
@@ -63,7 +59,42 @@ export const log_out = () => async (dispatch) => {
   dispatch({
     type: LOG_OUT,
   });
+  sessionStorage.removeItem("admin");
+};
 
-  sessionStorage.removeItem("ytc-access-token");
-  sessionStorage.removeItem("ytc-user");
+export const loadLoginAdmin = () => async (dispatch) => {
+  console.log("from login admin load");
+
+  const currentAdmin = auth.currentUser;
+  console.log(currentAdmin);
+  if (currentAdmin) {
+    db.collection("admins")
+      .doc(currentAdmin.uid)
+      .get()
+      .then((admin) => {
+        if (!admin.exists) {
+          dispatch({
+            type: LOGIN_FAIL,
+            payload: "Could not load the admin",
+          });
+          return;
+        }
+
+        const currentUser = {
+          id: admin.data().id,
+          imageUrl: admin.data().imageUrl,
+          name: admin.data().name,
+        };
+
+        sessionStorage.setItem("admin", JSON.stringify(currentUser));
+        dispatch({
+          type: LOGIN_SUCCESS,
+          payload: currentUser,
+        });
+      });
+  }
+  dispatch({
+    type: LOGIN_FAIL,
+    payload: "Could not load the admin",
+  });
 };

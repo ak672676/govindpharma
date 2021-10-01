@@ -1,5 +1,9 @@
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export const LOGIN_FAIL = 'LOGIN_FAIL'
-export const LOGIN_REQUEST = 'LOGIN_REQUEST'
-export const LOG_OUT = 'LOG_OUT'
-export const LOAD_PROFILE = 'LOAD_PROFILE'
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAIL = "LOGIN_FAIL";
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOG_OUT = "LOG_OUT";
+export const LOAD_ADMIN = "LOAD_ADMIN";
+
+export const SEARCH_USER_KEY_REQUEST = "SEARCH_USER_KEY_REQUEST";
+export const SEARCH_USER_KEY_SUCCESS = "SEARCH_USER_KEY_SUCCESS";
+export const SEARCH_USER_KEY_FAIL = "SEARCH_USER_KEY_FAIL";

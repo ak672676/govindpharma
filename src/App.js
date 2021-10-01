@@ -7,9 +7,13 @@ import LoginScreen from "./screens/login/LoginScreen";
 import HomeScreen from "./screens/home/HomeScreen";
 import Sidebar from "./components/sidebar/Sidebar";
 import CustomerScreen from "./screens/customer/CustomerScreen";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loadLoginAdmin } from "./redux/actions/auth.action";
+import MedicineScreen from "./screens/medicine/MedicineScreen";
 
-import apiKeys from "./config/key";
-import firebase from "firebase/app";
+// import apiKeys from "./config/key";
+// import firebase from "firebase/app";
 
 const Layout = ({ children }) => {
   return (
@@ -17,7 +21,7 @@ const Layout = ({ children }) => {
       <Header />
       <div className="app__container">
         <Sidebar />
-        <Container fluid className="app__main ">
+        <Container fluid className="app__main">
           {children}
         </Container>
       </div>
@@ -26,10 +30,19 @@ const Layout = ({ children }) => {
 };
 
 function App() {
-  if (!firebase.apps.length) {
-    console.log("Connected with Firebase");
-    firebase.initializeApp(apiKeys.firebaseConfig);
-  }
+  const { admin, loading } = useSelector((state) => state.auth);
+
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+
+
+  useEffect(() => {
+    if (!admin) dispatch(loadLoginAdmin());
+    if (!loading && !admin) {
+      history.push("/login");
+    }
+  }, [admin, loading, history]);
 
   return (
     <Switch>
@@ -44,6 +57,11 @@ function App() {
       <Route path="/customer" exact>
         <Layout>
           <CustomerScreen />
+        </Layout>
+      </Route>
+      <Route path="/medicine" exact>
+        <Layout>
+          <MedicineScreen />
         </Layout>
       </Route>
       <Route>

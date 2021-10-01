@@ -1,7 +1,14 @@
 import firebase from "firebase/app";
-import apiKey from "./config/key";
+import apiKeys from "./config/key";
 import "firebase/auth";
+import "firebase/firebase-firestore";
 
-firebase.initializeApp(apiKey.firebaseConfig);
+if (!firebase.apps.length) {
+  console.log("Connected with Firebase");
+  firebase.initializeApp(apiKeys.firebaseConfig);
+}
 
-export default firebase.auth();
+// firebase.initializeApp(apiKey.firebaseConfig);
+// console.log("Firebase initialsie");
+export const auth = firebase.auth();
+export const db = firebase.firestore();
