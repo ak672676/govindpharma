@@ -1,5 +1,13 @@
 import { db, auth } from "../../firebase";
-import { SEARCH_USER_KEY_FAIL, SEARCH_USER_KEY_REQUEST, SEARCH_USER_KEY_SUCCESS } from "../actionType";
+import {
+  ADD_NEW_ITEM_FAIL,
+  ADD_NEW_ITEM_CLEANLOADERROR,
+  ADD_NEW_ITEM_REQUEST,
+  ADD_NEW_ITEM_SUCCESS,
+  SEARCH_USER_KEY_FAIL,
+  SEARCH_USER_KEY_REQUEST,
+  SEARCH_USER_KEY_SUCCESS,
+} from "../actionType";
 
 // db.collection("books").onSnapshot((snapshot) => {
 //   const data = snapshot.docs.map((doc) => ({
@@ -22,7 +30,7 @@ export const medicineSearch = (key) => async (dispatch) => {
       console.log("All data in medicine collection", data);
       dispatch({
         type: SEARCH_USER_KEY_SUCCESS,
-        payload:data
+        payload: data,
       });
     });
   } catch (error) {
@@ -31,4 +39,42 @@ export const medicineSearch = (key) => async (dispatch) => {
       payload: error.message,
     });
   }
+};
+
+export const addItem = (item) => async (dispatch) => {
+  try {
+    dispatch({
+      type: ADD_NEW_ITEM_REQUEST,
+    });
+
+    console.log("item-> ", item);
+    // setTimeout(() => {
+    //   dispatch({
+    //     type: ADD_NEW_ITEM_SUCCESS,
+    //     payload: "Item Added",
+    //   });
+    // }, 3000);
+
+    db.collection("items")
+      .add(item)
+      .then((ref) => {
+        dispatch({
+          type: ADD_NEW_ITEM_SUCCESS,
+          payload: "Item added it id " + ref.id,
+        });
+      });
+      
+  } catch (err) {
+    console.log(err.message);
+    dispatch({
+      type: ADD_NEW_ITEM_FAIL,
+      payload: "Error: " + err.message,
+    });
+  }
+};
+
+export const cleanItemMsgError = (item) => async (dispatch) => {
+  dispatch({
+    type: ADD_NEW_ITEM_CLEANLOADERROR,
+  });
 };

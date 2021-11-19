@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
 import MedicineDetailView from "../../components/medicineDetailView/MedicineDetailView";
 import MedicineListItem from "../../components/medicineListItem/MedicineListItem";
 
-import { useDispatch, useSelector } from "react-redux";
 import { medicineSearch } from "../../redux/actions/medicine.action";
 
-function MedicineScreen() {
+function ItemScreen() {
   const [selectedMedicine, setSelectedMedicine] = useState(null);
 
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [show, setShow] = useState(false);
+
   // const items = [
   //   {
   //     id: "ss",
@@ -75,34 +77,13 @@ function MedicineScreen() {
       <Container fluid style={{ marginTop: "2rem" }}>
         <Row>
           <Col sm={9}>
-            <Button variant="primary" onClick={() => setShow(true)}>
-              Custom Width Modal
-            </Button>
-
-            <Modal
-              show={show}
-              onHide={() => setShow(false)}
-              dialogClassName="modal-90w"
-              aria-labelledby="example-custom-modal-styling-title"
-            >
-              <Modal.Header closeButton>
-                <Modal.Title id="example-custom-modal-styling-title">
-                  Custom Modal Styling
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p>
-                  Ipsum molestiae natus adipisci modi eligendi? Debitis amet
-                  quae unde commodi aspernatur enim, consectetur. Cumque
-                  deleniti temporibus ipsam atque a dolores quisquam quisquam
-                  adipisci possimus laboriosam. Quibusdam facilis doloribus
-                  debitis! Sit quasi quod accusamus eos quod. Ab quos
-                  consequuntur eaque quo rem! Mollitia reiciendis porro quo
-                  magni incidunt dolore amet atque facilis ipsum deleniti rem!
-                </p>
-              </Modal.Body>
-            </Modal>
-            <MedicineDetailView medicine={selectedMedicine} />
+            {selectedMedicine ? (
+              <MedicineDetailView medicine={selectedMedicine} />
+            ) : (
+              <Link to="/addItem">
+                <Button>Add Item</Button>
+              </Link>
+            )}
           </Col>
           <Col sm={3}>
             <Form onSubmit={onSearch}>
@@ -121,15 +102,17 @@ function MedicineScreen() {
             </Form>
 
             <hr />
-            {items.length
-              ? items.map((item) => (
-                  <MedicineListItem
-                    key={item.id}
-                    medicine={item}
-                    itemClicked={() => onMedicineItemClicked(item)}
-                  />
-                ))
-              : "Search your medicine"}
+            <div style={{ overflow: "auto", maxHeight: "70vh" }}>
+              {items.length
+                ? items.map((item) => (
+                    <MedicineListItem
+                      key={item.id}
+                      medicine={item}
+                      itemClicked={() => onMedicineItemClicked(item)}
+                    />
+                  ))
+                : "Search your medicine"}
+            </div>
           </Col>
         </Row>
       </Container>
@@ -137,4 +120,4 @@ function MedicineScreen() {
   );
 }
 
-export default MedicineScreen;
+export default ItemScreen;

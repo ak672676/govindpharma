@@ -43,7 +43,13 @@ const Sidebar = () => {
           <span>Medicine</span>
         </li>
       </Link>
-
+      <Link to="/utilities">
+        <li>
+          <MdSubscriptions size={23} />
+          <span>Utilities</span>
+        </li>
+      </Link>
+      
       <li>
         <MdThumbUp size={23} />
         <span>Liked Video</span>
